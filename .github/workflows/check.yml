@@ -29,6 +29,8 @@ jobs:
       - name: Install
         run: npm ci
       - name: Test
+        env:
+          PORT: 3000
         run: npm run test
   secret:
     runs-on: ubuntu-latest
