@@ -30,7 +30,7 @@ jobs:
         run: npm ci
       - name: Test
         env:
-          PORT: 3000
+          PORT: ${{ secrets.PORT }}
         run: npm run test
   secret:
     runs-on: ubuntu-latest
