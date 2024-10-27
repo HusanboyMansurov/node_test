@@ -31,12 +31,11 @@ jobs:
           ssh $USER@$HOST "
             if [ ! -d $APP_DIR ]; then
               mkdir -p $APP_DIR
-            fi
-            cd $APP_DIR
-            echo 'PORT=${PORT}' > .env
-            if [ ! -d .git ]; then
-              git clone https://github.com/HusanboyMansurov/test_cicd.git
-            else
+              git clone https://github.com/HusanboyMansurov/test_cicd.git $APP_DIR
+              cd $APP_DIR
+              echo 'PORT=${PORT}' > .env
+            else 
+              cd $APP_DIR
               git pull origin main
             fi
             npm install
