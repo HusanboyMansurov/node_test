@@ -35,7 +35,7 @@ jobs:
             cd $APP_DIR
             echo 'PORT=${PORT}' > .env
             if [ ! -d .git ]; then
-              git clone https://github.com/HusanboyMansurov/test_cicd.git .
+              git clone https://github.com/HusanboyMansurov/test_cicd.git $APP_DIR
             else
               git pull origin main
             fi
