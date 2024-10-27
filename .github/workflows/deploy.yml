@@ -24,12 +24,16 @@ jobs:
         env:
           HOST: 95.130.227.135      # VPS server IP manzili
           USER: root            # VPS foydalanuvchi nomi
-          APP_DIR: /ci-cd     # Dastur joylashuvi
+          APP_DIR: /ci_cd     # Dastur joylashuvi
           PORT: ${{ secrets.PORT }}
         run: |
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
           ssh $USER@$HOST "
-            cd $APP_DIR || (mkdir -p $APP_DIR && cd $APP_DIR)
+            if [ ! -d $APP_DIR ]; then
+              mkdir -p $APP_DIR
+              git clone https://github.com/HusanboyMansurov/test_cicd.git $APP_DIR
+            fi
+            cd $APP_DIR
             git pull origin main
             npm install
             npm run build
