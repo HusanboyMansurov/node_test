@@ -1,0 +1,38 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  # Faqat main branchga push qilinganda ishga tushadi
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodni yuklash
+        uses: actions/checkout@v2
+
+      - name: SSH kalitni sozlash
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        shell: bash
+
+      - name: Serverga deploy qilish
+        env:
+          HOST: 95.130.227.135      # VPS server IP manzili
+          USER: root            # VPS foydalanuvchi nomi
+          APP_DIR: /ci-cd     # Dastur joylashuvi
+          PORT: ${{ secrets.PORT }}
+        run: |
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+          ssh $USER@$HOST "
+            cd $APP_DIR || (mkdir -p $APP_DIR && cd $APP_DIR)
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all || pm2 start dist/main.js --name my-nestjs-app
+          "
+        shell: bash
